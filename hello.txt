@@ -1,0 +1,4 @@
+hello, myo
+i glad to meet you
+i writing this at git Bash
+bye
