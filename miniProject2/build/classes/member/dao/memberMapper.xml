@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="memberSQL">
+	<resultMap type="memberDTO" id="memberResult">
+		<result property="name" column="NAME"/>
+		<result property="id" column="ID"/>
+		<result property="pwd" column="PWD"/>
+		<result property="gender" column="GENDER"/>
+		<result property="email1" column="EMAIL1"/>
+		<result property="email2" column="EMAIL2"/>
+		<result property="tel1" column="TEL1"/>
+		<result property="tel2" column="TEL2"/>
+		<result property="tel3" column="TEL3"/>
+		<result property="zipcode" column="ZIPCODE"/>
+		<result property="addr1" column="ADDR1"/>
+		<result property="addr2" column="ADDR2"/>
+	</resultMap>
+	<!-- 회원가입 -->
+	<insert id="write" parameterType="memberDTO">
+		insert into member values(#{name}, #{id}, #{pwd}, #{gender}, #{email1}, #{email2}, #{tel1}, #{tel2}, #{tel3}, #{zipcode}, #{addr1}, #{addr2}, SYSDATE)
+	</insert>
+	<!-- 로그인 -->
+	<select id="login" parameterType="java.util.Map" resultMap="memberResult">
+		select * from member where id=#{id} and pwd=#{pwd}
+	</select>
+	<!-- 회원 기존 정보 -->
+	<select id="modifyInfo" parameterType="java.lang.String" resultMap="memberResult">
+		select * from member where id = '${id}'
+	</select>
+	<!-- 회원 정보 수정 -->
+	<update id="modify" parameterType="memberDTO">
+		update member set name=#{name}, pwd=#{pwd}, gender=#{gender}, email1=#{email1}, email2=#{email2}, tel1=#{tel1}, tel2=#{tel2}, tel3=#{tel3}, zipcode=#{zipcode}, addr1=#{addr1}, addr2=#{addr2}, logtime=sysdate where id=#{id} 
+	</update>
+	<!-- 아이디 중복 체크 -->
+	<select id="isExistId" parameterType="java.lang.String" resultMap="memberResult">
+		select count(*) from member where id=#{id}
+	</select>
+</mapper>

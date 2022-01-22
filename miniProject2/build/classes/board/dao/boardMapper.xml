@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="boardSQL">
+	<resultMap type="boardDTO" id="boardResult">
+		<result property="seq" column="SEQ"/>
+		<result property="id" column="ID"/>
+		<result property="name" column="NAME"/>
+		<result property="email" column="EMAIL"/>
+		<result property="subject" column="SUBJECT"/>
+		<result property="content" column="CONTENT"/>
+		<result property="ref" column="REF"/>
+		<result property="lev" column="LEV"/>
+		<result property="step" column="STEP"/>
+		<result property="pseq" column="PSEQ"/>
+		<result property="reply" column="REPLY"/>
+		<result property="hit" column="HIT"/>
+		<result property="logtime" column="LOGTIME"/>
+	</resultMap>
+	<!-- 글 작성 -->
+	<insert id="boardWrite" parameterType="java.util.Map">
+		insert into board (seq, id, name, email, subject, content, ref) 
+					values(seq_board.nextval, #{id}, #{name}, #{email}, #{subject}, #{content}, seq_board.currval)
+	</insert>
+	<!-- 리스트 가져오기 -->
+	<select id="getBoardList" parameterType="java.util.Map" resultMap="boardResult">
+		<![CDATA[
+		select * from 
+		(select rownum rn, tt.* from 
+		(select seq, id, name, email, subject, content, 
+			    ref, lev, step, pseq, reply, hit, 
+			    logtime from board order by ref desc, step asc)tt)
+	     where rn >= #{startNum} and rn <= #{endNum}]]>
+	</select>
+	<!-- 글 한개 보기 -->
+	<select id="getBoardView" parameterType="java.lang.Integer" resultMap="boardResult">
+		select * from board where seq = #{seq}
+	</select>
+	<!-- 전체 글 개수 뽑기 -->
+	<select id="getTotalA" resultType="java.lang.Integer">
+		select count(*) from board
+	</select>
+	<!-- 글 수정 -->
+	<update id="boardModify" parameterType="java.util.Map">
+		update board set subject=#{subject}, content=#{content}, logtime=sysdate where seq=#{seq}
+	</update>
+	<!-- 글 삭제 -->
+	<delete id="deleteBoard" parameterType="java.lang.Integer">
+		delete from board where seq=#{seq}
+	</delete>
+	<!-- 답글 추가를 위한 step 변경 -->
+	<update id="boardReplyWrite1" parameterType="boardDTO">
+		update board set step=step + 1 where ref = #{ref} and step>#{step}
+	</update>
+	<insert id="boardReplyWrite2" parameterType="java.util.Map">
+		insert into board values(seq_board.nextVal, 
+								#{id}, #{name}, #{email}, #{subject}, 
+								#{content}, #{ref}, #{lev}, #{step}, #{pseq}, 0, 0, sysdate)
+	</insert>
+	<update id="boardReplyWrite3" parameterType="int">
+		update board set reply=reply+1 where seq = #{pseq}
+	</update>
+	<!-- jquery를 사용한 delete: 서브쿼리 사용 -->
+	<delete id="getBoardDelete" parameterType="int">
+		begin
+			update board set reply=reply-1 where seq=(select pseq from board where seq = #{seq});
+			update board set subject = '[원글이 삭제된 답글] ' || subject where pseq = #{seq};
+			delete board where seq = #{seq};
+		end;
+	</delete>
+	<!-- 조회수 -->
+	<update id="boardHit" parameterType="int">
+		update board set hit = hit + 1 where seq = #{seq}
+	</update>
+</mapper>

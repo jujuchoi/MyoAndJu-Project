@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+ <configuration>
+ 	<properties resource="db.properties"></properties>
+ 	
+ 	<typeAliases>
+ 		<typeAlias type="member.bean.MemberDTO" alias="memberDTO"/>
+ 		<typeAlias type="board.bean.BoardDTO" alias="boardDTO"/>
+ 		<typeAlias type="imageboard.bean.ImageboardDTO" alias="imageboardDTO"/>
+ 		<typeAlias type="guestbook.bean.GuestbookDTO" alias="guestbookDTO"/>
+ 	</typeAliases>
+ 	
+ 	<environments default="development">
+ 		<environment id="development">
+ 			<transactionManager type="JDBC"/>
+ 			<dataSource type="POOLED"><!-- UNPOOLED -->
+ 				<property name="driver" value="${jdbc.driver}"/>
+ 				<property name="url" value="${jdbc.url}"/>
+ 				<property name="username" value="${jdbc.username}"/>
+ 				<property name="password" value="${jdbc.password}"/>
+ 			</dataSource>
+ 		</environment>		
+ 	</environments>
+ 	<mappers>
+ 		<mapper resource="member/dao/memberMapper.xml"/>
+ 		<mapper resource="board/dao/boardMapper.xml"/>
+ 		<mapper resource="imageboard/dao/imageboardMapper.xml"/>
+ 		<mapper resource="guestbook/dao/guestbookMapper.xml"/>
+ 	</mappers>
+ </configuration>

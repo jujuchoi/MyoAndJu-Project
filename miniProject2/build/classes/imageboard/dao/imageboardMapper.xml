@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="imageboardSQL">
+	<resultMap type="imageboardDTO" id="imageboardResult">
+		<result property="seq" column="SEQ"/>
+		<result property="imageId" column="IMAGEID"/>
+		<result property="imageName" column="IMAGENAME"/>
+		<result property="imagePrice" column="IMAGEPRICE"/>
+		<result property="imageQty" column="IMAGEQTY"/>
+		<result property="imageContent" column="IMAGECONTENT"/>
+		<result property="image1" column="IMAGE1"/>
+		<result property="logtime" column="LOGTIME"/>
+	</resultMap>
+	<!-- 이미지 등록 -->
+	<insert id="imageboardWrite" parameterType="imageboardDTO">
+		insert into imageboard values(seq_imageboard.nextval, #{imageId}, #{imageName}, #{imagePrice}, #{imageQty}, #{imageContent}, #{image1}, sysdate)
+	</insert>
+	<!-- 이미지 목록 -->
+	<select id="getImageboardList" parameterType="java.util.Map" resultMap="imageboardResult">
+		<!-- select * from (select rownum rn, tt.* from (select seq, imageId, imageName, imagePrice, imageQty, imageContent, image1, logtime
+		from imageboard order by seq desc)tt) where rn <![CDATA[ >= ]]> #{startNum} and rn <![CDATA[ <= ]]> #{endNum} -->
+		<![CDATA[
+		select * from (select rownum rn, tt.* from (select * from imageboard order by seq desc)tt)
+		where rn >= #{startNum} and rn <= #{endNum}
+		]]>
+	</select>
+	<!-- 전체 이미지 개수 -->
+	<select id="getTotalA" resultType="int">
+		select count(*) from imageboard
+	</select>
+	<!-- 이미지 삭제 -->
+	<!-- <delete id="imageDelete" parameterType="java.util.List">
+		delete from imageboard where seq = #{seq}
+	</delete> -->
+	<!-- T's code -->
+	<delete id="imageboardDelete" parameterType="java.util.Map">
+		<!-- 배열:parameterType="int" -  delete from imageboard where seq = #{seq} -->
+		<!-- Map 방식 -->
+		delete imageboard where seq in 
+		<foreach collection="check" item="seq" open="(" close=")" separator=",">
+			#{seq}
+		</foreach>
+	</delete>
+	<!-- 이미지 view -->
+	<select id="imageboardView" parameterType="int" resultType="imageboardDTO">
+		select * from imageboard where seq = #{seq}
+	</select>
+</mapper>

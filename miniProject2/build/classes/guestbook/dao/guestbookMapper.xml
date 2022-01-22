@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="guestbookSQL">
+	<resultMap type="guestbookDTO" id="guestbookResult">
+		<result property="seq" column="SEQ"/>
+		<result property="name" column="NAME"/>
+		<result property="email" column="EMAIL"/>
+		<result property="homepage" column="HOMEPAGE"/>
+		<result property="subject" column="SUBJECT"/>
+		<result property="content" column="CONTENT"/>
+		<result property="logtime" column="LOGTIME"/>
+	</resultMap>
+	<!-- 방명록 등록 -->
+	<insert id="guestbookWrite" parameterType="java.util.Map">
+		insert into guestbook (seq, name, email, homepage, subject, content, logtime) 
+						values(seq_guestbook.nextval, #{name}, #{email}, #{homepage}, #{subject}, #{content}, sysdate)
+	</insert>
+	<!-- 방명록 리스트 -->
+	<select id="getGuestbookList" parameterType="java.lang.Integer" resultMap="guestbookResult">
+		<![CDATA[
+		select * from (select rownum rn, tt.* from 
+		              (select seq, name, email, homepage, subject, content, logtime from guestbook order by seq desc)tt)
+		              where rn >= #{startNum} and rn <= #{endNum}
+		]]>
+	</select>
+	<!-- 방명록 총 개수 -->
+	<select id="getTotalA" resultType="int">
+		select count(*) from guestbook
+	</select>
+	<!-- 방명록 한 개 -->
+	<select id="getGuestbookView" parameterType="int" resultMap="guestbookResult">
+		select * from guestbook where seq = #{seq}
+	</select>
+</mapper>

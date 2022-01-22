@@ -1,0 +1,90 @@
+@charset "UTF-8";
+
+@import
+	url('https://fonts.googleapis.com/css2?family=Raleway:wght@100&display=swap')
+	;
+
+@import
+	url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Noto+Sans+KR:wght@100&family=Raleway:wght@200&display=swap')
+	;
+
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: auto;
+	background-color: #8CA6DB;
+	font-family: 'Raleway', 'Noto Sans KR', sans-serif;
+}
+
+#header {
+	margin: auto;
+	width: auto;
+	height: 10%;
+	text-align: center;
+	padding-top: 35px;
+	color: white;
+	font-weight: bolder;
+	background-color: #8CA6DB;
+	border: 1px solid #F2F7FB;
+}
+
+#container {
+	margin: auto;
+	width: auto;
+	height: auto;
+	background-color: #F2F7FB;
+}
+
+#container:after {
+	content: '';
+	display: block;
+	clear: both;
+	float: none;
+}
+
+#nav {
+	margin-top: 50px;
+	margin-left: 30px;
+	width: 30%;
+	height: 900px;
+	float: left;
+	background-color: #F2F7FB;
+	justify-content: center;
+	align-content: center;
+}
+
+#section {
+	margin-top: 50px;
+	margin-left: 30px;
+	width: 50%;
+	height: 900px;
+	float: left;
+	background-color: #F2F7FB;
+	justify-content: center;
+	align-content: center;
+}
+
+#footer {
+	margin-top: 15px;
+	width: auto;
+	height: 50px;
+	background-color: #B993D6;
+	font-size: 15px;
+	text-align: center;
+	color: white;
+}
+#footerText{
+	justify-content: center;
+	align-content: center;
+	display: flex;
+}
+
+#logo a{
+	text-decoration: none;
+	color: white;
+}
+h1{
+	text-decoration: none;
+	color: white;
+}
